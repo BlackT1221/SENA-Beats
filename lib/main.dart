@@ -20,7 +20,7 @@ class SenaBeatsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'SENA Beats',
+      title: 'SENA Musica',
 
       theme: ThemeData(
         brightness: Brightness.dark,
