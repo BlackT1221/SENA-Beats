@@ -24,7 +24,7 @@ class SenaBeatsApp extends StatelessWidget {
 
       theme: ThemeData(
         brightness: Brightness.dark,
-        primarySwatch: Colors.deepPurple,
+        primarySwatch: Colors.blueGrey,
         useMaterial3: true,
       ),
       home: MainScreen(),
