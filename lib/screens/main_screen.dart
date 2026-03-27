@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mi_primer_proyecto/screens/search_screen.dart';
 import 'package:mi_primer_proyecto/screens/favourites_screen.dart';
+import 'package:mi_primer_proyecto/screens/profile_screen.dart';
 
 class MainScreen extends StatefulWidget{
   const MainScreen({super.key});
@@ -15,7 +16,8 @@ class _MainScreenState extends State<MainScreen>{
   // Lista de pantallas para navegar
   final List<Widget> _pages = [
     const SearchScreen(),
-    const FavouritesScreen()
+    const FavouritesScreen(),
+    const ProfileScreen()
   ];
 
   @override
@@ -30,7 +32,8 @@ class _MainScreenState extends State<MainScreen>{
         onTap: (index) => setState(() => _currentIndex = index),
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.search), label: "Buscar"),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "Favoritos")
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "Favoritos"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil')
         ],
       ),
     );
