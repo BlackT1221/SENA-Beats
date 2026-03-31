@@ -29,6 +29,7 @@ class MusicService {
             artist: item['artistName'] ?? 'Artista desconocido',
             // Usamos la imagen de 100x100 que nos da la API
             image: item['artworkUrl100'] ?? 'https://via.placeholder.com/150',
+            previewUrl: item['previewUrl'] ?? ''
           );
         }).toList();
       } else {

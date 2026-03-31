@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mi_primer_proyecto/providers/favourites_provider.dart';
+import 'package:mi_primer_proyecto/providers/music_provider.dart';
 import 'package:mi_primer_proyecto/providers/profile_provider.dart';
 import 'package:mi_primer_proyecto/screens/main_screen.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,7 @@ void main(){
       ChangeNotifierProvider(create: (_) => FavouritesProvider()),
       // Agregar el nuevo proveedor
       ChangeNotifierProvider(create: (_) => ProfileProvider()),
+      ChangeNotifierProvider(create: (_) => MusicProvider()),
     ],
     child: const SenaBeatsApp(),
     ),
