@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mi_primer_proyecto/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import '../services/music_service.dart';
 import '../providers/favourites_provider.dart';
@@ -15,7 +16,24 @@ class _SearchScreenState extends State<SearchScreen> {
   List<Track> _results = [];
   bool _isLoading = false;
 
-  // 2. BORRAMOS el AudioPlayer local y el _currentPlayingId. 
+  final List<Track> _mosqueraTrends = [
+    Track(
+      id: 'm1',
+      title: 'Pasodoble Mosqueruno',
+      artist: 'Banda Sinfónica',
+      image: 'https://via.placeholder.com/150',
+      previewUrl: '...',
+    ),
+    Track(
+      id: 'm2',
+      title: 'Programando en el SENA',
+      artist: 'ADSO Beats',
+      image: 'https://via.placeholder.com/150',
+      previewUrl: '...',
+    ),
+  ];
+
+  // 2. BORRAMOS el AudioPlayer local y el _currentPlayingId.
   // Ya no los necesitamos aquí porque viven en el MusicProvider.
 
   void _search(String query) async {
@@ -30,71 +48,121 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     final favProvider = context.watch<FavouritesProvider>();
-    
+
     // 3. ESCUCHAMOS al proveedor de música global
     final musicProvider = context.watch<MusicProvider>();
+
+    final authProvider = context.watch<AuthProvider>();
+
+    final displayList = (_results.isEmpty && authProvider.isAtMosquera)
+        ? _mosqueraTrends
+        : _results;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('SENA Beats'),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              onSubmitted: _search,
-              decoration: InputDecoration(
-                hintText: 'Buscar artista o canción...',
-                prefixIcon: const Icon(Icons.music_note),
-                filled: true,
-                fillColor: Colors.white10,
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+          preferredSize: const Size.fromHeight(120),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  onSubmitted: _search,
+                  decoration: InputDecoration(
+                    hintText: 'Buscar artista o canción...',
+                    prefixIcon: const Icon(Icons.music_note),
+                    filled: true,
+                    fillColor: Colors.white10,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                ),
               ),
-            ),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                color: authProvider.isAtMosquera
+                    ? Colors.green[900]
+                    : Colors.orange[900],
+                child: Text(
+                  authProvider.isAtMosquera
+                      ? "📍 Estás en Mosquera - Disfrutando tendencias locales"
+                      : "🌍 Actualmente no estás en Mosquera",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
-      body: _isLoading 
-        ? const Center(child: CircularProgressIndicator())
-        : ListView.builder(
-            itemCount: _results.length,
-            itemBuilder: (context, index) {
-              final track = _results[index];
-              final isFav = favProvider.favourites.any((t) => t.id == track.id);
-              
-              // 4. Verificamos si ESTA canción específica es la que está sonando globalmente
-              final isCurrentTrack = musicProvider.currentTrack?.id == track.id;
-              final isPlaying = isCurrentTrack && musicProvider.isPlaying;
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: displayList.length,
+              itemBuilder: (context, index) {
+                final track = displayList[index];
+                final isFav = favProvider.favourites.any(
+                  (t) => t.id == track.id,
+                );
 
-              return ListTile(
-                leading: GestureDetector(
-                  // 5. Llamamos al método global. Esto activará la vibración y la barra fija.
-                  onTap: () => musicProvider.playTrack(track),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: Image.network(track.image, width: 50, height: 50, fit: BoxFit.cover),
-                      ),
-                      // El icono ahora refleja el estado GLOBAL
-                      Icon(
-                        isPlaying ? Icons.pause_circle : Icons.play_circle_fill,
-                        color: Colors.white,
-                        size: 40,
-                      )
-                    ],
+                // 4. Verificamos si ESTA canción específica es la que está sonando globalmente
+                final isCurrentTrack =
+                    musicProvider.currentTrack?.id == track.id;
+                final isPlaying = isCurrentTrack && musicProvider.isPlaying;
+
+                return ListTile(
+                  leading: GestureDetector(
+                    // 5. Llamamos al método global. Esto activará la vibración y la barra fija.
+                    onTap: () => musicProvider.playTrack(track),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: Image.network(
+                            track.image,
+                            width: 50,
+                            height: 50,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(
+                                  Icons.music_note,
+                                  color: Colors.grey,
+                                ),
+                          ),
+                        ),
+                        // El icono ahora refleja el estado GLOBAL
+                        Icon(
+                          isPlaying
+                              ? Icons.pause_circle
+                              : Icons.play_circle_fill,
+                          color: Colors.white,
+                          size: 40,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                title: Text(track.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: Text(track.artist),
-                trailing: IconButton(
-                  icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: Colors.red),
-                  onPressed: () => favProvider.toggleFavourite(track),
-                ),
-              );
-            },
-          ),
+                  title: Text(
+                    track.title,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(track.artist),
+                  trailing: IconButton(
+                    icon: Icon(
+                      isFav ? Icons.favorite : Icons.favorite_border,
+                      color: Colors.red,
+                    ),
+                    onPressed: () => favProvider.toggleFavourite(track),
+                  ),
+                );
+              },
+            ),
     );
   }
 }

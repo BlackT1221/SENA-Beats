@@ -41,6 +41,8 @@ dependencies:
   path_provider: ^2.1.5
   audioplayers: ^6.6.0
   vibration: ^3.1.8
+  local_auth: ^3.0.1
+  geolocator: ^14.0.1
 
 dev_dependencies:
   flutter_test:

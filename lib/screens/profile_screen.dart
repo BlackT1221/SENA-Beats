@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'dart:io'; // Para trabajar con archivos del movil
 import '../providers/profile_provider.dart';
 
 class ProfileScreen extends StatelessWidget{

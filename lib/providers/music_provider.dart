@@ -36,7 +36,7 @@ class MusicProvider extends ChangeNotifier {
       _isPlaying = false;
     }
 
-    if (await Vibration.hasVibrator() ?? false){
+    if (await Vibration.hasVibrator()){
       Vibration.vibrate(duration: 40, amplitude: 100);
     }
     notifyListeners();
