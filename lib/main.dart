@@ -10,7 +10,6 @@ void main(){
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => FavouritesProvider()),
-      // Agregar el nuevo proveedor
       ChangeNotifierProvider(create: (_) => ProfileProvider()),
       ChangeNotifierProvider(create: (_) => MusicProvider()),
       ChangeNotifierProvider(create: (_) => AuthProvider()),
@@ -25,15 +24,25 @@ class SenaBeatsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final musicProvider = context.watch<MusicProvider>();
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'SENA Canciones',
-
+      
+      // CONFIGURACIÓN MATERIAL 3
       theme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.blueGrey,
         useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: musicProvider.themeColor,
+          brightness: Brightness.dark,
+          ),
+          fontFamily: 'Urbanist',
       ),
+
+      themeMode: ThemeMode.dark,
+
       home: MainScreen(),
     );
   }

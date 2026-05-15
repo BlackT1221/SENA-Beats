@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:vibration/vibration.dart';
+import 'package:palette_generator/palette_generator.dart'; // Extraer el color
 import '../models/track.dart';
 
 class MusicProvider extends ChangeNotifier {
   final AudioPlayer _audioPlayer = AudioPlayer();
   Track? _currentTrack;
   bool _isPlaying = false;
+
+  Color _themeColor = Colors.deepPurple;
+  Color get themeColor => _themeColor;
 
   Track? get currentTrack => _currentTrack;
   bool get isPlaying => _isPlaying;
@@ -28,6 +32,8 @@ class MusicProvider extends ChangeNotifier {
       } else {
         await _audioPlayer.resume();
         _isPlaying = true;
+
+        _updateThemeColor(track.image);
       }
     } else {
       _currentTrack = track;
@@ -41,6 +47,23 @@ class MusicProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<void>_updateThemeColor(String imageUrl) async {
+    try {
+      final PaletteGenerator paletteGenerator = await PaletteGenerator.fromImageProvider(
+        NetworkImage(imageUrl),
+        size: const Size(200, 200),
+      );
+      
+      _themeColor = paletteGenerator.vibrantColor?.color ??
+                    paletteGenerator.dominantColor?.color ??
+                    Colors.deepPurple;
+    } catch (e) {
+      _themeColor = Colors.deepPurple;
+      notifyListeners();
+    }
+  }
+
   Future<void> stop() async {
     await _audioPlayer.stop();
     _currentTrack = null;

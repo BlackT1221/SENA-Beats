@@ -3,7 +3,7 @@ import 'package:mi_primer_proyecto/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import '../services/music_service.dart';
 import '../providers/favourites_provider.dart';
-import '../providers/music_provider.dart'; // <--- 1. Importa el nuevo proveedor
+import '../providers/music_provider.dart';
 import '../models/track.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -116,49 +116,53 @@ class _SearchScreenState extends State<SearchScreen> {
                     musicProvider.currentTrack?.id == track.id;
                 final isPlaying = isCurrentTrack && musicProvider.isPlaying;
 
-                return ListTile(
-                  leading: GestureDetector(
-                    // 5. Llamamos al método global. Esto activará la vibración y la barra fija.
-                    onTap: () => musicProvider.playTrack(track),
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: Image.network(
-                            track.image,
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(
-                                  Icons.music_note,
-                                  color: Colors.grey,
-                                ),
+                return Semantics(
+                  label: "Canción: ${track.title} de ${track.artist}",
+                  button: true,
+                  child: ListTile(
+                    leading: GestureDetector(
+                      // 5. Llamamos al método global. Esto activará la vibración y la barra fija.
+                      onTap: () => musicProvider.playTrack(track),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: Image.network(
+                              track.image,
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Icon(
+                                    Icons.music_note,
+                                    color: Colors.grey,
+                                  ),
+                            ),
                           ),
-                        ),
-                        // El icono ahora refleja el estado GLOBAL
-                        Icon(
-                          isPlaying
-                              ? Icons.pause_circle
-                              : Icons.play_circle_fill,
-                          color: Colors.white,
-                          size: 40,
-                        ),
-                      ],
+                          // El icono ahora refleja el estado GLOBAL
+                          Icon(
+                            isPlaying
+                                ? Icons.pause_circle
+                                : Icons.play_circle_fill,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  title: Text(
-                    track.title,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(track.artist),
-                  trailing: IconButton(
-                    icon: Icon(
-                      isFav ? Icons.favorite : Icons.favorite_border,
-                      color: Colors.red,
+                    title: Text(
+                      track.title,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    onPressed: () => favProvider.toggleFavourite(track),
+                    subtitle: Text(track.artist),
+                    trailing: IconButton(
+                      icon: Icon(
+                        isFav ? Icons.favorite : Icons.favorite_border,
+                        color: Colors.red,
+                      ),
+                      onPressed: () => favProvider.toggleFavourite(track),
+                    ),
                   ),
                 );
               },
