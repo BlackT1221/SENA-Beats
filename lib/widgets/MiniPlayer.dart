@@ -34,6 +34,7 @@ class MiniPlayer extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+
             // BOTÓN PLAY / PAUSA
             IconButton(
               icon: Icon(musicProvider.isPlaying ? Icons.pause : Icons.play_arrow),
