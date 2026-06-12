@@ -4,7 +4,6 @@ import 'package:mi_primer_proyecto/screens/remote_missions_screen.dart';
 import 'package:mi_primer_proyecto/screens/search_screen.dart';
 import 'package:mi_primer_proyecto/screens/favourites_screen.dart';
 import 'package:mi_primer_proyecto/screens/profile_screen.dart';
-import 'package:mi_primer_proyecto/widgets/Ecualizador.dart';
 import 'package:mi_primer_proyecto/widgets/MiniPlayer.dart';
 import 'package:provider/provider.dart';
 
@@ -82,7 +81,6 @@ class _MainScreenState extends State<MainScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const MiniPlayer(),
-          const Ecualizador(),
           BottomNavigationBar(
             type: BottomNavigationBarType
                 .fixed, 

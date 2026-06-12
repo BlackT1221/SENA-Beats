@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
+import 'package:provider/provider.dart';
+import '../providers/music_provider.dart';
 
 class Ecualizador extends StatefulWidget{
   const Ecualizador({super.key});
@@ -9,8 +11,11 @@ class Ecualizador extends StatefulWidget{
   State<Ecualizador> createState() => _EqualizerWidgetState();
 }
 
-class __EqualizerWidgetState extends State<Ecualizador> {
-  final List<double> _heights = List.filled(5,20);
+class _EqualizerWidgetState extends State<Ecualizador> {
+
+
+
+  final List<double> _heights = List.filled(3,4);
   Timer? _timer;
   final Random _random = Random();
 
@@ -22,10 +27,11 @@ class __EqualizerWidgetState extends State<Ecualizador> {
 
 
   void _startAnimation(){
+
     _timer = Timer.periodic(Duration(milliseconds: 300),(timer) {
       setState(() {
         for(int i =0; i<_heights.length;i++){
-          _heights[i] =_random.nextInt(90).toDouble();
+          _heights[i] =_random.nextInt(45).toDouble();
         }
       });
     });
@@ -39,6 +45,7 @@ class __EqualizerWidgetState extends State<Ecualizador> {
 
  @override
   Widget build(BuildContext context) {
+      final musicProvider = context.watch<MusicProvider>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.end, // Alinea las barras abajo
@@ -49,7 +56,7 @@ class __EqualizerWidgetState extends State<Ecualizador> {
             duration: const Duration(milliseconds: 150), // Duración de la transición
             curve: Curves.easeInOut, // Curva de animación suave
             width: 12,
-            height: _heights[index],
+            height:musicProvider.isPlaying ? _heights[index] : 0,
             decoration: BoxDecoration(
               color: Colors.purpleAccent,
               borderRadius: BorderRadius.circular(6),
