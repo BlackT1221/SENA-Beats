@@ -1,2 +1,1 @@
-# Estructura del proyecto
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mi_primer_proyecto/widgets/Ecualizador.dart';
 import 'package:provider/provider.dart';
 import '../providers/music_provider.dart';
 
@@ -34,6 +35,7 @@ class MiniPlayer extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+              const Ecualizador(),
             // BOTÓN PLAY / PAUSA
             IconButton(
               icon: Icon(musicProvider.isPlaying ? Icons.pause : Icons.play_arrow),
